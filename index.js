@@ -13,6 +13,40 @@ const CLASS_CONTROL_HIDE = 'slider__control_hide';
 const CLASS_ITEM_ACTIVE = 'slider__item_active';
 const CLASS_INDICATOR_ACTIVE = 'active';
 
+function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
+r(function(){
+    if (!document.getElementsByClassName) {
+        var getElementsByClassName = function(node, classname) {
+            var a = [];
+            var re = new RegExp('(^| )'+classname+'( |$)');
+            var els = node.getElementsByTagName("*");
+            for(var i=0,j=els.length; i < j; i++)
+                if(re.test(els[i].className))a.push(els[i]);
+            return a;
+        }
+        var videos = getElementsByClassName(document.body,"youtube");
+    } else {
+        var videos = document.getElementsByClassName("youtube");
+    }
+    var nb_videos = videos.length;
+    for (var i=0; i < nb_videos; i++) {
+        videos[i].style.backgroundImage = 'url(https://img.youtube.com/vi/' + videos[i].id + '/sddefault.jpg)';
+        var play = document.createElement("div");
+        play.setAttribute("class","play");
+        videos[i].appendChild(play);
+        videos[i].onclick = function() {
+            var iframe = document.createElement("iframe");
+            var iframe_url = "https://www.youtube.com/embed/" + this.id + "?autoplay=1&autohide=1";
+            if (this.getAttribute("data-params")) iframe_url+='&'+this.getAttribute("data-params");
+            iframe.setAttribute("src",iframe_url);
+            iframe.setAttribute("frameborder",'0');
+            iframe.style.width  = this.style.width;
+            iframe.style.height = this.style.height;
+            this.parentNode.replaceChild(iframe, this);
+        }
+    }
+});
+
 function hasTouchDevice() {
   return !!('ontouchstart' in window || navigator.maxTouchPoints);
 }
@@ -27,7 +61,6 @@ function hasElementInVew($elem) {
 }
 
 function Slider($elem, config) {
-  // configuration of the slider
   this._config = {
     loop: true,
     autoplay: false,
@@ -36,45 +69,43 @@ function Slider($elem, config) {
     refresh: true,
     swipe: true,
   };
-  // slider properties
+
   this._widthItem = 0;
   this._widthWrapper = 0;
   this._itemsInVisibleArea = 0;
-  this._transform = 0; // текущее значение трансформации
-  this._transformStep = 0; // значение шага трансформации
+  this._transform = 0;
+  this._transformStep = 0; 
   this._intervalId = null;
-  // elements of slider
-  this._$root = null; // root element of slider (default ".slider__item")
-  this._$wrapper = null; // element with class ".slider__wrapper"
-  this._$items = null; // element with class ".slider__items"
-  this._$itemList = null; // elements with class ".slider__item"
-  this._$controlPrev = null; // element with class .slider__control[data-slide="prev"]
-  this._$controlNext = null; // element with class .slider__control[data-slide="next"]
-  this._$indicatorList = null; // индикаторы
-  // min and min order
+
+  this._$root = null;
+  this._$wrapper = null;
+  this._$items = null;
+  this._$itemList = null;
+  this._$controlPrev = null;
+  this._$controlNext = null;
+  this._$indicatorList = null;
+
   this._minOrder = 0;
   this._maxOrder = 0;
-  // items with min and max order
+
   this._$itemByMinOrder = null;
   this._$itemByMaxOrder = null;
-  // min and max value of translate
+
   this._minTranslate = 0;
   this._maxTranslate = 0;
-  // default slider direction
+
   this._direction = 'next';
-  // determines whether the position of item needs to be determined
+
   this._updateItemPositionFlag = false;
   this._activeItems = [];
   this._isTouchDevice = hasTouchDevice();
 
-  // constructor
   this._init($elem, config);
   this._addEventListener();
 }
 
-// initial setup of slider
 Slider.prototype._init = function ($root, config) {
-  // elements of slider
+
   this._$root = $root;
   this._$itemList = $root.querySelectorAll(SELECTOR_ITEM);
   this._$items = $root.querySelector(SELECTOR_ITEMS);
@@ -82,12 +113,12 @@ Slider.prototype._init = function ($root, config) {
   this._$controlPrev = $root.querySelector(SELECTOR_PREV);
   this._$controlNext = $root.querySelector(SELECTOR_NEXT);
   this._$indicatorList = $root.querySelectorAll(SELECTOR_INDICATOR);
-  // create some constants
+
   const $itemList = this._$itemList;
   const widthItem = $itemList[0].offsetWidth;
   const widthWrapper = this._$wrapper.offsetWidth;
   const itemsInVisibleArea = Math.round(widthWrapper / widthItem);
-  // initial setting properties
+
   this._widthItem = widthItem;
   this._widthWrapper = widthWrapper;
   this._itemsInVisibleArea = itemsInVisibleArea;
@@ -97,7 +128,7 @@ Slider.prototype._init = function ($root, config) {
       this._config[key] = config[key];
     }
   }
-  // initial setting order and translate items
+
   for (let i = 0, length = $itemList.length; i < length; i++) {
     $itemList[i].dataset.index = i;
     $itemList[i].dataset.order = i;
@@ -107,34 +138,34 @@ Slider.prototype._init = function ($root, config) {
     }
   }
   this._updateClassForActiveItems();
-  // hide prev arrow for non-infinite slider
+
   if (!this._config.loop) {
     if (this._$controlPrev) {
       this._$controlPrev.classList.add(CLASS_CONTROL_HIDE);
     }
     return;
   }
-  // translate last item before first
+
   const count = $itemList.length - 1;
   const translate = -$itemList.length * 100;
   $itemList[count].dataset.order = -1;
   $itemList[count].dataset.translate = -$itemList.length * 100;
   $itemList[count].style.transform = 'translateX('.concat(translate, '%)');
-  // update values of extreme properties
+
   this._updateExtremeProperties();
   this._updateIndicators();
-  // calling _autoplay
+
   this._autoplay();
 };
 
-// подключения обработчиков событий для слайдера
+
 Slider.prototype._addEventListener = function () {
   const $root = this._$root;
 
-  // on click
+
   $root.addEventListener('click', this._eventHandler.bind(this));
 
-  // on hover
+
   if (this._config.autoplay && this._config.pauseOnHover) {
     $root.addEventListener(
       'mouseenter',
@@ -150,7 +181,7 @@ Slider.prototype._addEventListener = function () {
     );
   }
 
-  // on resize
+
   if (this._config.refresh) {
     window.addEventListener(
       'resize',
@@ -160,12 +191,12 @@ Slider.prototype._addEventListener = function () {
     );
   }
 
-  // on transitionstart and transitionend
+
   if (this._config.loop) {
     this._$items.addEventListener(
       'transitionstart',
       function () {
-        // transitionstart
+
         this._updateItemPositionFlag = true;
         window.requestAnimationFrame(this._updateItemPosition.bind(this));
       }.bind(this)
@@ -173,13 +204,13 @@ Slider.prototype._addEventListener = function () {
     this._$items.addEventListener(
       'transitionend',
       function () {
-        // transitionend
+
         this._updateItemPositionFlag = false;
       }.bind(this)
     );
   }
 
-  // on touchstart and touchend
+
   if (this._isTouchDevice && this._config.swipe) {
     $root.addEventListener(
       'touchstart',
@@ -201,7 +232,7 @@ Slider.prototype._addEventListener = function () {
     );
   }
 
-  // on mousedown and mouseup
+
   if (!this._isTouchDevice && this._config.swipe) {
     $root.addEventListener(
       'mousedown',
@@ -224,7 +255,7 @@ Slider.prototype._addEventListener = function () {
   }
 };
 
-// update values of extreme properties
+
 Slider.prototype._updateExtremeProperties = function () {
   const $itemList = this._$itemList;
   this._minOrder = +$itemList[0].dataset.order;
@@ -248,7 +279,7 @@ Slider.prototype._updateExtremeProperties = function () {
   }
 };
 
-// update position of item
+
 Slider.prototype._updateItemPosition = function () {
   if (!this._updateItemPositionFlag) {
     return;
@@ -267,7 +298,6 @@ Slider.prototype._updateItemPosition = function () {
       translate += count * 100;
       $min.dataset.translate = translate;
       $min.style.transform = 'translateX('.concat(translate, '%)');
-      // update values of extreme properties
       this._updateExtremeProperties();
     }
   } else {
@@ -280,15 +310,14 @@ Slider.prototype._updateItemPosition = function () {
       translate -= count * 100;
       $max.dataset.translate = translate;
       $max.style.transform = 'translateX('.concat(translate, '%)');
-      // update values of extreme properties
       this._updateExtremeProperties();
     }
   }
-  // updating...
+
   requestAnimationFrame(this._updateItemPosition.bind(this));
 };
 
-// _updateClassForActiveItems
+
 Slider.prototype._updateClassForActiveItems = function () {
   const activeItems = this._activeItems;
   const $itemList = this._$itemList;
@@ -303,7 +332,6 @@ Slider.prototype._updateClassForActiveItems = function () {
   }
 };
 
-// _updateIndicators
 Slider.prototype._updateIndicators = function () {
   const $indicatorList = this._$indicatorList;
   const $itemList = this._$itemList;
@@ -320,7 +348,6 @@ Slider.prototype._updateIndicators = function () {
   }
 };
 
-// move slides
 Slider.prototype._move = function () {
   if (!hasElementInVew(this._$root)) {
     return;
@@ -372,19 +399,16 @@ Slider.prototype._move = function () {
   this._$items.style.transform = 'translateX('.concat(transform, '%)');
 };
 
-// _moveToNext
 Slider.prototype._moveToNext = function () {
   this._direction = 'next';
   this._move();
 };
 
-// _moveToPrev
 Slider.prototype._moveToPrev = function () {
   this._direction = 'prev';
   this._move();
 };
 
-// _moveTo
 Slider.prototype._moveTo = function (index) {
   const $indicatorList = this._$indicatorList;
   let nearestIndex = null;
@@ -414,24 +438,20 @@ Slider.prototype._moveTo = function (index) {
   }
 };
 
-// обработчик click для слайдера
 Slider.prototype._eventHandler = function (e) {
   const $target = e.target;
   this._autoplay('stop');
   if ($target.classList.contains(CLASS_CONTROL)) {
-    // при клике на кнопки влево и вправо
     e.preventDefault();
     this._direction = $target.dataset.slide;
     this._move();
   } else if ($target.dataset.slideTo) {
-    // при клике на индикаторы
     const index = +$target.dataset.slideTo;
     this._moveTo(index);
   }
   this._autoplay();
 };
 
-// _autoplay
 Slider.prototype._autoplay = function (action) {
   if (!this._config.autoplay) {
     return;
@@ -452,9 +472,7 @@ Slider.prototype._autoplay = function (action) {
   }
 };
 
-// _refresh
 Slider.prototype._refresh = function () {
-  // create some constants
   const $itemList = this._$itemList;
   const widthItem = $itemList[0].offsetWidth;
   const widthWrapper = this._$wrapper.offsetWidth;
@@ -469,7 +487,6 @@ Slider.prototype._refresh = function () {
   this._$items.classList.add(SLIDER_TRANSITION_OFF);
   this._$items.style.transform = 'translateX(0)';
 
-  // setting properties after reset
   this._widthItem = widthItem;
   this._widthWrapper = widthWrapper;
   this._itemsInVisibleArea = itemsInVisibleArea;
@@ -478,7 +495,6 @@ Slider.prototype._refresh = function () {
   this._updateItemPositionFlag = false;
   this._activeItems = [];
 
-  // setting order and translate items after reset
   for (let i = 0, length = $itemList.length; i < length; i++) {
     const $item = $itemList[i];
     const position = i;
@@ -499,7 +515,6 @@ Slider.prototype._refresh = function () {
     }.bind(this)
   );
 
-  // hide prev arrow for non-infinite slider
   if (!this._config.loop) {
     if (this._$controlPrev) {
       this._$controlPrev.classList.add(CLASS_CONTROL_HIDE);
@@ -507,20 +522,16 @@ Slider.prototype._refresh = function () {
     return;
   }
 
-  // translate last item before first
   const count = $itemList.length - 1;
   const translate = -$itemList.length * 100;
   $itemList[count].dataset.order = -1;
   $itemList[count].dataset.translate = -$itemList.length * 100;
   $itemList[count].style.transform = 'translateX('.concat(translate, '%)');
-  // update values of extreme properties
   this._updateExtremeProperties();
   this._updateIndicators();
-  // calling _autoplay
   this._autoplay();
 };
 
-// public
 Slider.prototype.next = function () {
   this._moveToNext();
 };
