@@ -157,7 +157,7 @@ body {
 
 .main__section-3_text {
   padding: 0 15px;
-  max-width: 550px;
+  max-width: 700px;
 }
 
 .main__section-3_text p {
@@ -224,6 +224,7 @@ body {
 
 .main__section-6_article {
   padding: 0 20px;
+  max-width: 700px;
 }
 
 .main__section-6_article ul,
@@ -447,8 +448,6 @@ details[open] summary ~ * {
   user-select: none;
 }
 
-/* кнопки влево и вправо */
-
 .slider__control {
   position: absolute;
   top: 50%;
@@ -500,8 +499,6 @@ details[open] summary ~ * {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
 }
 
-/* индикаторы */
-
 .slider__indicators {
   position: absolute;
   right: 0;
@@ -543,6 +540,35 @@ details[open] summary ~ * {
 
 .slider__item:nth-child(4) {
   background-color: rgb(204, 204, 204);
+}
+
+.youtube {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  transition: all 200ms ease-out;
+  cursor: pointer;
+}
+.youtube .play {
+  background: url("../img/youtube-play-btn.png") no-repeat;
+  background-position: 0 -50px;
+  -webkit-background-size: 100% auto;
+  background-size: 100% auto;
+  position: absolute;
+  height: 50px;
+  width: 69px;
+  transition: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.youtube:hover .play {
+  background-position: 0 0;
 }
 
 @keyframes sweep {
