@@ -13,6 +13,24 @@ const CLASS_CONTROL_HIDE = 'slider__control_hide';
 const CLASS_ITEM_ACTIVE = 'slider__item_active';
 const CLASS_INDICATOR_ACTIVE = 'active';
 
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+window.onclick = function(event) {
+if (!event.target.matches('.dropbtn')) {
+
+  var dropdowns = document.getElementsByClassName("dropdown-content");
+  var i;
+  for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show')) {
+      openDropdown.classList.remove('show');
+    }
+  }
+}
+}
+
 function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
 r(function(){
     if (!document.getElementsByClassName) {
