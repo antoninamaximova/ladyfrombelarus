@@ -1,6 +1,5 @@
 * {
   font-family: "Roboto", sans-serif;
-  overflow: hidden;
 }
 
 a {
@@ -261,6 +260,7 @@ nav li:hover > .dropdown-content {
 .main__section-3 {
   padding: 50px 0;
   flex-wrap: wrap;
+  overflow: hidden;
 }
 
 .main__section-3_text {
