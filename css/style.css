@@ -75,6 +75,11 @@ body {
   background-size: cover;
 }
 
+.overlay {
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
 .header__banner-width {
   max-width: 805px;
   margin: 0 auto;
@@ -85,9 +90,11 @@ body {
   font-style: normal;
   font-size: 36px;
   margin: 0;
+  color: #fff;
 }
 
 .header__article {
+  color: #fff;
   margin: 0;
   font-weight: 400;
   font-style: normal;
@@ -230,6 +237,7 @@ nav li:hover > .dropdown-content {
 
 .section-2_container p {
   margin-top: 0;
+  padding: 0 15px;
   text-align: justify;
   font-family: "Montserrat", sans-serif;
 }
@@ -287,7 +295,6 @@ nav li:hover > .dropdown-content {
   padding: 30px;
   border-radius: 50%;
   border: 2px solid #4054b2;
-  margin: 15px;
 }
 
 .main__section-5-articles {
@@ -298,12 +305,14 @@ nav li:hover > .dropdown-content {
   max-width: 510px;
   max-height: 125px;
   align-items: center;
+  padding: 15px;
 }
 
 .main__section-5-article p {
   font-family: "Montserrat", Sans-serif;
   font-size: 17px;
   font-weight: 300;
+  margin: 0 0 0 10px;
 }
 
 .main__section-6 {
@@ -337,6 +346,7 @@ h3 {
 
 .main__section-7_list {
   list-style: none;
+  padding: 0 15px;
 }
 
 .main__section-7_list li {
@@ -372,9 +382,13 @@ h3 {
 }
 
 .main__section-guarantee_container {
-  max-width: 780px;
+  max-width: 770px;
   margin: 0 auto;
   font-size: 20px;
+}
+
+.main__section-guarantee_container p {
+  padding: 0 15px;
 }
 
 .main__section-tariff {
@@ -683,10 +697,14 @@ details[open] summary ~ * {
   background-color: #d3d3d3;
   padding: 50px 0;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .footer_main {
   flex-wrap: wrap;
+  width: 100%;
+  padding: 0 50px;
+  justify-content: space-between;
 }
 
 .payment {
@@ -701,6 +719,23 @@ details[open] summary ~ * {
   font-size: 40px;
   height: 40px;
   padding: 15px;
+}
+
+.footer_main > h3 > a:hover {
+  text-decoration: underline;
+}
+
+.site-info {
+  width: 100%;
+  text-align: center;
+}
+
+.site-info a {
+  color: #333;
+}
+
+.site-info a:hover {
+  text-decoration: underline;
 }
 
 @keyframes sweep {
@@ -718,7 +753,11 @@ details[open] summary ~ * {
   }
 
   .main__section-3_img {
-    max-width: 100%;
+    max-width: 350px;
+  }
+
+  .main__section-5-article {
+    padding: 35px 15px;
   }
 }
 
@@ -797,5 +836,11 @@ details[open] summary ~ * {
   #menu__toggle:checked ~ .header__nav-list {
     visibility: visible;
     left: 0;
+  }
+}
+
+@media all and (max-width: 321px) {
+  .main__section-3_img {
+    max-width: 300px;
   }
 }
