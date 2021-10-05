@@ -75,6 +75,11 @@ body {
   background-size: cover;
 }
 
+.overlay {
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
 .header__banner-width {
   max-width: 805px;
   margin: 0 auto;
@@ -85,9 +90,11 @@ body {
   font-style: normal;
   font-size: 36px;
   margin: 0;
+  color: #fff;
 }
 
 .header__article {
+  color: #fff;
   margin: 0;
   font-weight: 400;
   font-style: normal;
