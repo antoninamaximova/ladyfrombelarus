@@ -1,5 +1,6 @@
 * {
   font-family: "Roboto", sans-serif;
+  overflow: hidden;
 }
 
 a {
@@ -752,7 +753,7 @@ details[open] summary ~ * {
     max-width: 100%;
   }
 
-  .main__section-3_img img {
+  .main__section-3_img-container img {
     max-width: 320px;
     margin: 0 auto;
   }
@@ -841,7 +842,7 @@ details[open] summary ~ * {
 }
 
 @media all and (max-width: 321px) {
-  .main__section-3_img img {
+  .main__section-3_img-container img {
     max-width: 300px;
   }
 }
