@@ -752,8 +752,9 @@ details[open] summary ~ * {
     max-width: 100%;
   }
 
-  .main__section-3_img {
+  .main__section-3_img img {
     max-width: 320px;
+    margin: 0 auto;
   }
 
   .main__section-5-article {
@@ -840,7 +841,7 @@ details[open] summary ~ * {
 }
 
 @media all and (max-width: 321px) {
-  .main__section-3_img {
+  .main__section-3_img img {
     max-width: 300px;
   }
 }
