@@ -683,10 +683,14 @@ details[open] summary ~ * {
   background-color: #d3d3d3;
   padding: 50px 0;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .footer_main {
   flex-wrap: wrap;
+  width: 100%;
+  padding: 0 50px;
+  justify-content: space-between;
 }
 
 .payment {
@@ -701,6 +705,23 @@ details[open] summary ~ * {
   font-size: 40px;
   height: 40px;
   padding: 15px;
+}
+
+.footer_main > h3 > a:hover {
+  text-decoration: underline;
+}
+
+.site-info {
+  width: 100%;
+  text-align: center;
+}
+
+.site-info a {
+  color: #333;
+}
+
+.site-info a:hover {
+  text-decoration: underline;
 }
 
 @keyframes sweep {
